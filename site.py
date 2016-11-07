@@ -3,10 +3,11 @@ import os
 import string
 from bs4 import BeautifulSoup
 
-def build(header, page, schema, page_name, out_path):
+def build(header, page, nav, schema, page_name, out_path):
 
-    header = str.replace(header, "<!-- SCHEMA -->", schema)
-    text = header + page
+    header_section = str.replace(header, "<!-- SCHEMA -->", schema)
+    page_section = str.replace(page, "<<!-- NAV -->", nav)
+    text = header_section + page_section
 
     text = BeautifulSoup(text)
     text = text.prettify()
@@ -23,6 +24,11 @@ def main():
 
     root_path = "/Users/karlnilsen/apps/karlnilsen.com/source/root/"
     out_path = "/Users/karlnilsen/apps/karlnilsen.com/build/"
+
+    root_nav_file = "/Users/karlnilsen/apps/karlnilsen.com/source/root/root_nav.html"
+    with open(root_nav_file, 'r') as f:
+        nav = f.read()
+
     for file in os.listdir(root_path):
         if file.endswith(".html"):
             file_path = root_path + file
@@ -32,10 +38,15 @@ def main():
                 schema = f.read()
             with open(file_path, 'r', encoding="utf-8") as f:
                 page = f.read()
-            build(header, page, schema, page_name, out_path)
+            build(header, page, nav, schema, page_name, out_path)
 
     nb_path = "/Users/karlnilsen/apps/karlnilsen.com/source/nb/"
     out_path = "/Users/karlnilsen/apps/karlnilsen.com/build/nb/"
+
+    nb_nav_file = "/Users/karlnilsen/apps/karlnilsen.com/source/root/nb_nav.html"
+    with open(nb_nav_file, 'r') as f:
+        nav = f.read()
+
     for file in os.listdir(nb_path):
         if file.endswith(".html"):
             file_path = nb_path + file
@@ -45,7 +56,7 @@ def main():
                 schema = f.read()
             with open(file_path, 'r', encoding="utf-8") as f:
                 page = f.read()
-            build(header, page, schema, page_name, out_path)
+            build(header, page, nav, schema, page_name, out_path)
 
 if __name__ == '__main__':
     main()
