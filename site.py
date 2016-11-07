@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 
 def build(header, page, nav, schema, page_name, out_path):
 
-    header_section = str.replace(header, "<!-- SCHEMA -->", schema)
-    page_section = str.replace(page, "<<!-- NAV -->", nav)
+    header_section = str.replace(header, "{{ SCHEMA }}", schema)
+    page_section = str.replace(page, "{{ NAV }}", nav)
     text = header_section + page_section
 
     text = BeautifulSoup(text)
@@ -28,7 +28,7 @@ def main():
     root_path = "/Users/karlnilsen/apps/karlnilsen.com/source/root/"
     out_path = "/Users/karlnilsen/apps/karlnilsen.com/build/"
 
-    root_nav_file = "/Users/karlnilsen/apps/karlnilsen.com/source/root/root_nav.html"
+    root_nav_file = "/Users/karlnilsen/apps/karlnilsen.com/source/templates/root_nav.html"
     with open(root_nav_file, 'r') as f:
         nav = f.read()
 
@@ -47,7 +47,7 @@ def main():
     nb_path = "/Users/karlnilsen/apps/karlnilsen.com/source/nb/"
     out_path = "/Users/karlnilsen/apps/karlnilsen.com/build/nb/"
 
-    nb_nav_file = "/Users/karlnilsen/apps/karlnilsen.com/source/root/nb_nav.html"
+    nb_nav_file = "/Users/karlnilsen/apps/karlnilsen.com/source/templates/nb_nav.html"
     with open(nb_nav_file, 'r') as f:
         nav = f.read()
 
