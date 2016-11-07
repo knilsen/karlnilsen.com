@@ -3,6 +3,7 @@ import os
 import string
 from bs4 import BeautifulSoup
 
+
 def build(header, page, nav, schema, page_name, out_path):
 
     header_section = str.replace(header, "<!-- SCHEMA -->", schema)
@@ -16,12 +17,14 @@ def build(header, page, nav, schema, page_name, out_path):
     with open(file_name, 'w') as f:
         f.write(text)
 
+
 def main():
 
     header_file = "/Users/karlnilsen/apps/karlnilsen.com/templates/header.html"
     with open(header_file, 'r') as f:
         header = f.read()
 
+    # build root documents (index, cv, notebook, contact)
     root_path = "/Users/karlnilsen/apps/karlnilsen.com/source/root/"
     out_path = "/Users/karlnilsen/apps/karlnilsen.com/build/"
 
@@ -40,6 +43,7 @@ def main():
                 page = f.read()
             build(header, page, nav, schema, page_name, out_path)
 
+    # build notebook documents
     nb_path = "/Users/karlnilsen/apps/karlnilsen.com/source/nb/"
     out_path = "/Users/karlnilsen/apps/karlnilsen.com/build/nb/"
 
