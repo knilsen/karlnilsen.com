@@ -1,7 +1,7 @@
 #! /Users/karlnilsen/bin/anaconda/bin/python
 import os
 import string
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 
 
 def build(header, page, nav, schema, page_name, out_path):
@@ -10,8 +10,8 @@ def build(header, page, nav, schema, page_name, out_path):
     page_section = str.replace(page, "{{ NAV }}", nav)
     text = header_section + page_section
 
-    text = BeautifulSoup(text)
-    text = text.prettify()
+    # text = BeautifulSoup(text)
+    # text = text.prettify()
 
     file_name = out_path + page_name
     with open(file_name, 'w') as f:
@@ -20,7 +20,7 @@ def build(header, page, nav, schema, page_name, out_path):
 
 def main():
 
-    header_file = "/Users/karlnilsen/apps/karlnilsen.com/templates/header.html"
+    header_file = "/Users/karlnilsen/apps/karlnilsen.com/source/templates/header.html"
     with open(header_file, 'r') as f:
         header = f.read()
 
