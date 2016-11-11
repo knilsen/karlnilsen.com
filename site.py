@@ -70,21 +70,36 @@ def main():
     args = parser.parse_args()
 
     if args.root:
-        source_item = "{}source/root/{}".format(base_dir, args.filename)
+        try:
+            source_item = "{}source/root/{}".format(base_dir, args.filename)
+        except:
+            print("error:", sys.exc_info()[0])
+            raise
         out_dir = "{}build/".format(base_dir)
         root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
         with open(root_nav_file, 'r') as f:
             nav = f.read()
         build_single(source_item, out_dir, header, nav)
     elif args.nb:
-        source_item = "{}source/nb/{}".format(base_dir, args.filename)
+        try:
+            source_item = "{}source/nb/{}".format(base_dir, args.filename)
+        except:
+            print("error:", sys.exc_info()[0])
+            raise
         out_dir = "{}build/nb/".format(base_dir)
         nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
         with open(nb_nav_file, 'r') as f:
             nav = f.read()
         build_single(source_item, out_dir, header, nav)
     else:
-        root_path = "{}source/root/".format(base_dir)
+        filelist = []
+    	for dir_name, sub_dirs, files in os.walk("{}source/".format(base_dir)):
+    		for file in files:
+    			if file.endswith(".html"):
+    				filelist.append(os.path.join(dir_name, file))
+
+
+        root_path =
         root_out_path = "{}build/".format(base_dir)
         nb_path = "{}source/nb/".format(base_dir)
         nb_out_path = "{}build/nb/".format(base_dir)
