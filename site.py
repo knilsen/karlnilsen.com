@@ -4,6 +4,7 @@ import string
 import argparse
 # from bs4 import BeautifulSoup
 
+
 def build_single(source_item, out_dir, header, nav):
 
     schema_file = os.path.splitext(source_item)[0] + "_schema.txt"
@@ -24,12 +25,13 @@ def build_single(source_item, out_dir, header, nav):
         f.write(text)
 
 
-def build_all(root_path, nb_path, root_out_path, nb_out_path, header):
+def build_all(source_item):
 
-    # to do. . .
+    header_file = "{}source/templates/header.html".format(base_dir)
+        with open(header_file, 'r') as f:
+            header = f.read()
 
-    # build root documents (index, cv, notebook, contact)
-    for file in os.listdir(root_path):
+    for file in source_item:
         if file.endswith(".html"):
             file_path = root_path + file
             page_name = file
@@ -42,7 +44,17 @@ def build_all(root_path, nb_path, root_out_path, nb_out_path, header):
 
     # build notebook documents
     for file in os.listdir(nb_path):
-        if file.endswith(".html"):
+        if "root" in file:
+            out_dir = "{}build/".format(base_dir)
+            root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
+                with open(root_nav_file, 'r') as f:
+                    root_nav = f.read()
+        elif "nb" in file:
+            out_dir = "{}build/nb/".format(base_dir)
+            nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
+                with open(nb_nav_file, 'r') as f:
+                    nb_nav = f.read()
+
             file_path = nb_path + file
             page_name = file
             schema_file = nb_path + os.path.splitext(file)[0] + "_schema.txt"
@@ -92,20 +104,18 @@ def main():
             nav = f.read()
         build_single(source_item, out_dir, header, nav)
     else:
-
-            # to do. . .
-        filelist = []
-    	for dir_name, sub_dirs, files in os.walk("{}source/".format(base_dir)):
-    		for file in files:
-    			if file.endswith(".html"):
-    				filelist.append(os.path.join(dir_name, file))
-
-
-        root_path =
-        root_out_path = "{}build/".format(base_dir)
-        nb_path = "{}source/nb/".format(base_dir)
-        nb_out_path = "{}build/nb/".format(base_dir)
-        build_all(root_path, nb_path, root_out_path, nb_out_path, header)
+        source_item = []
+        for dir_name, sub_dirs, files in os.walk("{}source/".format(base_dir)):
+            for file in files:
+                if sub_dirs == "root":
+                    if file.endswith(".html"):
+                        source_item.append(os.path.join(dir_name, file))
+                elif sub_dirs == "nb":
+                    if file.endswith(".html"):
+                        source_item.append(os.path.join(dir_name, file))
+        source_item = set(source_item)
+        source_item = list(source_item)
+        build_all(source_item)
 
 if __name__ == '__main__':
     main()
