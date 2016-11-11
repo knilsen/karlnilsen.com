@@ -26,7 +26,7 @@ def build_single(source_item, out_dir, header, nav):
 
 def build_all(root_path, nb_path, root_out_path, nb_out_path, header):
 
-    # under construction . . .
+    # to do. . .
 
     # build root documents (index, cv, notebook, contact)
     for file in os.listdir(root_path):
@@ -92,6 +92,8 @@ def main():
             nav = f.read()
         build_single(source_item, out_dir, header, nav)
     else:
+
+            # to do. . .
         filelist = []
     	for dir_name, sub_dirs, files in os.walk("{}source/".format(base_dir)):
     		for file in files:
