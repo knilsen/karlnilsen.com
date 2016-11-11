@@ -32,6 +32,19 @@ def build_all(source_item):
             header = f.read()
 
     for file in source_item:
+        if "root" in file:
+            out_dir = "{}build/".format(base_dir)
+            root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
+                with open(root_nav_file, 'r') as f:
+                    root_nav = f.read()
+            schema_file = os.path.dirname + os.path.splitext(file)[0] + "_schema.txt"
+        elif "nb" in file:
+            out_dir = "{}build/nb/".format(base_dir)
+            nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
+                with open(nb_nav_file, 'r') as f:
+                    nb_nav = f.read()
+
+
         if file.endswith(".html"):
             file_path = root_path + file
             page_name = file
@@ -44,16 +57,6 @@ def build_all(source_item):
 
     # build notebook documents
     for file in os.listdir(nb_path):
-        if "root" in file:
-            out_dir = "{}build/".format(base_dir)
-            root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
-                with open(root_nav_file, 'r') as f:
-                    root_nav = f.read()
-        elif "nb" in file:
-            out_dir = "{}build/nb/".format(base_dir)
-            nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
-                with open(nb_nav_file, 'r') as f:
-                    nb_nav = f.read()
 
             file_path = nb_path + file
             page_name = file
