@@ -13,59 +13,43 @@ def build_single(source_item, out_dir, header, nav):
     with open(source_item, 'r', encoding="utf-8") as f:
         page = f.read()
 
-    header_section = str.replace(header, "{{ SCHEMA }}", schema)
-    page_section = str.replace(page, "{{ NAV }}", nav)
-    text = header_section + page_section
-
-    # text = BeautifulSoup(text)
-    # text = text.prettify()
-
-    file_name = out_dir + os.path.basename(source_item)
-    with open(file_name, 'w') as f:
-        f.write(text)
-
 
 def build_all(source_item):
 
     header_file = "{}source/templates/header.html".format(base_dir)
         with open(header_file, 'r') as f:
             header = f.read()
+    with open(source_item, 'r', encoding="utf-8") as f:
+        page = f.read()
 
     for file in source_item:
-        if "root" in file:
+        if file.startswith("/Users/karlnilsen/apps/karlnilsen.com/source/root/"):
             out_dir = "{}build/".format(base_dir)
             root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
-                with open(root_nav_file, 'r') as f:
-                    root_nav = f.read()
-            schema_file = os.path.dirname + os.path.splitext(file)[0] + "_schema.txt"
-        elif "nb" in file:
+            with open(root_nav_file, 'r') as f:
+                root_nav = f.read()
+            schema_file = os.path.dirname(file) + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
+            with open(schema_file, 'r', encoding="utf-8") as f:
+                schema = f.read()
+        elif file.startswith("/Users/karlnilsen/apps/karlnilsen.com/source/nb/"):
             out_dir = "{}build/nb/".format(base_dir)
             nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
-                with open(nb_nav_file, 'r') as f:
-                    nb_nav = f.read()
-
-
-        if file.endswith(".html"):
-            file_path = root_path + file
-            page_name = file
-            schema_file = root_path + os.path.splitext(file)[0] + "_schema.txt"
+            with open(nb_nav_file, 'r') as f:
+                nb_nav = f.read()
+            schema_file = os.path.dirname(file) + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
             with open(schema_file, 'r', encoding="utf-8") as f:
                 schema = f.read()
-            with open(file_path, 'r', encoding="utf-8") as f:
-                page = f.read()
-            build(header, page, nav, schema, page_name, out_path)
 
-    # build notebook documents
-    for file in os.listdir(nb_path):
+        header_section = str.replace(header, "{{ SCHEMA }}", schema)
+        page_section = str.replace(page, "{{ NAV }}", nav)
+        text = header_section + page_section
 
-            file_path = nb_path + file
-            page_name = file
-            schema_file = nb_path + os.path.splitext(file)[0] + "_schema.txt"
-            with open(schema_file, 'r', encoding="utf-8") as f:
-                schema = f.read()
-            with open(file_path, 'r', encoding="utf-8") as f:
-                page = f.read()
-            build(header, page, nav, schema, page_name, out_path)
+        # text = BeautifulSoup(text)
+        # text = text.prettify()
+
+        file_name = out_dir + os.path.basename(source_item)
+        with open(file_name, 'w') as f:
+            f.write(text)
 
 
 def main():
