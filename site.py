@@ -14,31 +14,33 @@ def build_single(source_item, out_dir, header, nav):
         page = f.read()
 
 
-def build_all(source_item):
+def build_all(source_item, base_dir):
 
     header_file = "{}source/templates/header.html".format(base_dir)
-        with open(header_file, 'r') as f:
-            header = f.read()
-    with open(source_item, 'r', encoding="utf-8") as f:
-        page = f.read()
+    with open(header_file, 'r') as f:
+        header = f.read()
 
     for file in source_item:
         if file.startswith("/Users/karlnilsen/apps/karlnilsen.com/source/root/"):
             out_dir = "{}build/".format(base_dir)
             root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
             with open(root_nav_file, 'r') as f:
-                root_nav = f.read()
-            schema_file = os.path.dirname(file) + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
+                nav = f.read()
+            schema_file = os.path.dirname(file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
             with open(schema_file, 'r', encoding="utf-8") as f:
                 schema = f.read()
+            with open(file, 'r') as f:
+                page = f.read()
         elif file.startswith("/Users/karlnilsen/apps/karlnilsen.com/source/nb/"):
             out_dir = "{}build/nb/".format(base_dir)
             nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
             with open(nb_nav_file, 'r') as f:
-                nb_nav = f.read()
-            schema_file = os.path.dirname(file) + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
+                nav = f.read()
+            schema_file = os.path.dirname(file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
             with open(schema_file, 'r', encoding="utf-8") as f:
                 schema = f.read()
+            with open(file, 'r') as f:
+                page = f.read()
 
         header_section = str.replace(header, "{{ SCHEMA }}", schema)
         page_section = str.replace(page, "{{ NAV }}", nav)
@@ -47,7 +49,7 @@ def build_all(source_item):
         # text = BeautifulSoup(text)
         # text = text.prettify()
 
-        file_name = out_dir + os.path.basename(source_item)
+        file_name = out_dir + os.path.basename(file)
         with open(file_name, 'w') as f:
             f.write(text)
 
@@ -65,7 +67,7 @@ def main():
                         help="process single page from root directory")
     parser.add_argument("--nb", action="store_true",
                         help="process single page from notebook directory")
-    parser.add_argument("filename", help="enter the file name")
+    parser.add_argument("filename", nargs= "?", help="enter the file name")
     args = parser.parse_args()
 
     if args.root:
@@ -94,15 +96,9 @@ def main():
         source_item = []
         for dir_name, sub_dirs, files in os.walk("{}source/".format(base_dir)):
             for file in files:
-                if sub_dirs == "root":
-                    if file.endswith(".html"):
+                if file.endswith(".html") and not file.startswith("/Users/karlnilsen/apps/karlnilsen.com/source/templates/"):
                         source_item.append(os.path.join(dir_name, file))
-                elif sub_dirs == "nb":
-                    if file.endswith(".html"):
-                        source_item.append(os.path.join(dir_name, file))
-        source_item = set(source_item)
-        source_item = list(source_item)
-        build_all(source_item)
+        build_all(source_item, base_dir)
 
 if __name__ == '__main__':
     main()
