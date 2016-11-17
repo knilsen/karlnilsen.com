@@ -15,10 +15,6 @@ def build_single(source_item, out_dir, header, nav):
 
 def build_all(source_item, base_dir):
 
-    header_file = "{}source/templates/header.html".format(base_dir)
-    with open(header_file, "r") as f:
-        header = f.read()
-
     for file in source_item:
         if file.startswith("{}source/content/root/".format(base_dir)):
             out_dir = "{}build/".format(base_dir)
@@ -29,6 +25,9 @@ def build_all(source_item, base_dir):
                 file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
             with open(schema_file, "r", encoding="utf-8") as f:
                 schema = f.read()
+            header_file = "{}source/templates/root_header.html".format(base_dir)
+            with open(header_file, "r") as f:
+                header = f.read()
             with open(file, "r") as f:
                 page = f.read()
         elif file.startswith("{}source/content/nb/".format(base_dir)):
@@ -40,6 +39,9 @@ def build_all(source_item, base_dir):
                 file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
             with open(schema_file, "r", encoding="utf-8") as f:
                 schema = f.read()
+            header_file = "{}source/templates/nb_header.html".format(base_dir)
+            with open(header_file, "r") as f:
+                header = f.read()
             with open(file, "r") as f:
                 page = f.read()
 
