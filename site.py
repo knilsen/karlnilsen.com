@@ -2,44 +2,45 @@
 import os
 import string
 import argparse
-# from bs4 import BeautifulSoup
 
 
 def build_single(source_item, out_dir, header, nav):
 
     schema_file = os.path.splitext(source_item)[0] + "_schema.txt"
-    with open(schema_file, 'r', encoding="utf-8") as f:
+    with open(schema_file, "r", encoding="utf-8") as f:
         schema = f.read()
-    with open(source_item, 'r', encoding="utf-8") as f:
+    with open(source_item, "r", encoding="utf-8") as f:
         page = f.read()
 
 
 def build_all(source_item, base_dir):
 
     header_file = "{}source/templates/header.html".format(base_dir)
-    with open(header_file, 'r') as f:
+    with open(header_file, "r") as f:
         header = f.read()
 
     for file in source_item:
-        if file.startswith("/Users/karlnilsen/apps/karlnilsen.com/source/root/"):
+        if file.startswith("{}source/content/root/".format(base_dir)):
             out_dir = "{}build/".format(base_dir)
             root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
-            with open(root_nav_file, 'r') as f:
+            with open(root_nav_file, "r") as f:
                 nav = f.read()
-            schema_file = os.path.dirname(file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
-            with open(schema_file, 'r', encoding="utf-8") as f:
+            schema_file = os.path.dirname(
+                file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
+            with open(schema_file, "r", encoding="utf-8") as f:
                 schema = f.read()
-            with open(file, 'r') as f:
+            with open(file, "r") as f:
                 page = f.read()
-        elif file.startswith("/Users/karlnilsen/apps/karlnilsen.com/source/nb/"):
+        elif file.startswith("{}source/content/nb/".format(base_dir)):
             out_dir = "{}build/nb/".format(base_dir)
             nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
-            with open(nb_nav_file, 'r') as f:
+            with open(nb_nav_file, "r") as f:
                 nav = f.read()
-            schema_file = os.path.dirname(file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
-            with open(schema_file, 'r', encoding="utf-8") as f:
+            schema_file = os.path.dirname(
+                file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
+            with open(schema_file, "r", encoding="utf-8") as f:
                 schema = f.read()
-            with open(file, 'r') as f:
+            with open(file, "r") as f:
                 page = f.read()
 
         header_section = str.replace(header, "{{ SCHEMA }}", schema)
@@ -50,7 +51,7 @@ def build_all(source_item, base_dir):
         # text = text.prettify()
 
         file_name = out_dir + os.path.basename(file)
-        with open(file_name, 'w') as f:
+        with open(file_name, "w") as f:
             f.write(text)
 
 
@@ -59,7 +60,7 @@ def main():
     base_dir = "/Users/karlnilsen/apps/karlnilsen.com/"
 
     header_file = "{}source/templates/header.html".format(base_dir)
-    with open(header_file, 'r') as f:
+    with open(header_file, "r") as f:
         header = f.read()
 
     parser = argparse.ArgumentParser(description=None)
@@ -67,40 +68,40 @@ def main():
                         help="process single page from root directory")
     parser.add_argument("--nb", action="store_true",
                         help="process single page from notebook directory")
-    parser.add_argument("filename", nargs= "?", help="enter the file name")
+    parser.add_argument("filename", nargs="?", help="enter the file name")
     args = parser.parse_args()
 
     if args.root:
         try:
-            source_item = "{}source/root/{}".format(base_dir, args.filename)
+            source_item = "{}source/content/root/{}".format(base_dir, args.filename)
         except:
             print("error:", sys.exc_info()[0])
             raise
         out_dir = "{}build/".format(base_dir)
         root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
-        with open(root_nav_file, 'r') as f:
+        with open(root_nav_file, "r") as f:
             nav = f.read()
         build_single(source_item, out_dir, header, nav)
     elif args.nb:
         try:
-            source_item = "{}source/nb/{}".format(base_dir, args.filename)
+            source_item = "{}source/content/nb/{}".format(base_dir, args.filename)
         except:
             print("error:", sys.exc_info()[0])
             raise
         out_dir = "{}build/nb/".format(base_dir)
         nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
-        with open(nb_nav_file, 'r') as f:
+        with open(nb_nav_file, "r") as f:
             nav = f.read()
         build_single(source_item, out_dir, header, nav)
     else:
         source_item = []
-        for dir_name, sub_dirs, files in os.walk("{}source/".format(base_dir)):
+        for dir_name, sub_dirs, files in os.walk("{}source/content/".format(base_dir)):
             for file in files:
-                if file.endswith(".html") and not file.startswith("/Users/karlnilsen/apps/karlnilsen.com/source/templates/"):
-                        source_item.append(os.path.join(dir_name, file))
+                if file.endswith(".html"):
+                    source_item.append(os.path.join(dir_name, file))
         build_all(source_item, base_dir)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
 # The MIT License (MIT)
