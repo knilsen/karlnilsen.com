@@ -4,53 +4,58 @@ import string
 import argparse
 
 
-def build_single(source_item, out_dir, header, nav):
+def build_single(source_item, header, nav, schema, out_dir):
 
-    schema_file = os.path.splitext(source_item)[0] + "_schema.txt"
-    with open(schema_file, "r", encoding="utf-8") as f:
-        schema = f.read()
-    with open(source_item, "r", encoding="utf-8") as f:
-        page = f.read()
+        header_section = str.replace(header, "{{ SCHEMA }}", schema)
+        body_section = str.replace(source_item, "{{ NAV }}", nav)
+        text = header_section + body_section
+        
+        file_name = out_dir + os.path.basename(source_item)
+        with open(file_name, "w") as f:
+            f.write(text)
 
 
 def build_all(source_item, base_dir):
 
+    root_header_file = "{}source/templates/root_header.html".format(base_dir)
+    with open(header_file, "r") as f:
+        root_header = f.read()
+    root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
+    with open(root_nav_file, "r") as f:
+        root_nav = f.read()
+    nb_header_file = "{}source/templates/nb_header.html".format(base_dir)
+    with open(header_file, "r") as f:
+        nb_header = f.read()
+    nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
+    with open(nb_nav_file, "r") as f:
+        nb_nav = f.read()
+
     for file in source_item:
         if file.startswith("{}source/content/root/".format(base_dir)):
+            with open(file, "r") as f:
+                page = f.read()
+            header = root_header
+            nav = root_nav
+            schema_file = os.path.dirname(
+                file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
+            with open(schema_file, "r", encoding="utf-8") as f:
+                schema = f.read()
             out_dir = "{}build/".format(base_dir)
-            root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
-            with open(root_nav_file, "r") as f:
-                nav = f.read()
-            schema_file = os.path.dirname(
-                file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
-            with open(schema_file, "r", encoding="utf-8") as f:
-                schema = f.read()
-            header_file = "{}source/templates/root_header.html".format(base_dir)
-            with open(header_file, "r") as f:
-                header = f.read()
-            with open(file, "r") as f:
-                page = f.read()
+
         elif file.startswith("{}source/content/nb/".format(base_dir)):
-            out_dir = "{}build/nb/".format(base_dir)
-            nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
-            with open(nb_nav_file, "r") as f:
-                nav = f.read()
+            with open(file, "r") as f:
+                page = f.read()
+            header = nb_header
+            nav = nb_nav
             schema_file = os.path.dirname(
                 file) + "/" + os.path.splitext(os.path.basename(file))[0] + "_schema.txt"
             with open(schema_file, "r", encoding="utf-8") as f:
                 schema = f.read()
-            header_file = "{}source/templates/nb_header.html".format(base_dir)
-            with open(header_file, "r") as f:
-                header = f.read()
-            with open(file, "r") as f:
-                page = f.read()
+            out_dir = "{}build/nb/".format(base_dir)
 
         header_section = str.replace(header, "{{ SCHEMA }}", schema)
-        page_section = str.replace(page, "{{ NAV }}", nav)
-        text = header_section + page_section
-
-        # text = BeautifulSoup(text)
-        # text = text.prettify()
+        body_section = str.replace(page, "{{ NAV }}", nav)
+        text = header_section + body_section
 
         file_name = out_dir + os.path.basename(file)
         with open(file_name, "w") as f:
@@ -79,22 +84,36 @@ def main():
         except:
             print("error:", sys.exc_info()[0])
             raise
-        out_dir = "{}build/".format(base_dir)
+        header_file = "{}source/templates/root_header.html".format(base_dir)
+        with open(header_file, "r") as f:
+            header = f.read()
         root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
         with open(root_nav_file, "r") as f:
             nav = f.read()
-        build_single(source_item, out_dir, header, nav)
+        schema_file = os.path.dirname(
+            source_item) + "/" + os.path.splitext(os.path.basename(source_item))[0] + "_schema.txt"
+        with open(schema_file, "r", encoding="utf-8") as f:
+            schema = f.read()
+        out_dir = "{}build/".format(base_dir)
+        build_single(source_item, header, nav, schema, out_dir)
     elif args.nb:
         try:
             source_item = "{}source/content/nb/{}".format(base_dir, args.filename)
         except:
             print("error:", sys.exc_info()[0])
             raise
-        out_dir = "{}build/nb/".format(base_dir)
-        nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
-        with open(nb_nav_file, "r") as f:
+        header_file = "{}source/templates/nb_header.html".format(base_dir)
+        with open(header_file, "r") as f:
+            header = f.read()
+        root_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
+        with open(root_nav_file, "r") as f:
             nav = f.read()
-        build_single(source_item, out_dir, header, nav)
+        schema_file = os.path.dirname(
+            source_item) + "/" + os.path.splitext(os.path.basename(source_item))[0] + "_schema.txt"
+        with open(schema_file, "r", encoding="utf-8") as f:
+            schema = f.read()
+        out_dir = "{}build/".format(base_dir)
+        build_single(source_item, header, nav, schema, out_dir)
     else:
         source_item = []
         for dir_name, sub_dirs, files in os.walk("{}source/content/".format(base_dir)):
