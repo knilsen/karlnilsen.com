@@ -9,7 +9,7 @@ def build_single(source_item, header, nav, schema, out_dir):
         header_section = str.replace(header, "{{ SCHEMA }}", schema)
         body_section = str.replace(source_item, "{{ NAV }}", nav)
         text = header_section + body_section
-        
+
         file_name = out_dir + os.path.basename(source_item)
         with open(file_name, "w") as f:
             f.write(text)
@@ -18,13 +18,13 @@ def build_single(source_item, header, nav, schema, out_dir):
 def build_all(source_item, base_dir):
 
     root_header_file = "{}source/templates/root_header.html".format(base_dir)
-    with open(header_file, "r") as f:
+    with open(root_header_file, "r") as f:
         root_header = f.read()
     root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
     with open(root_nav_file, "r") as f:
         root_nav = f.read()
     nb_header_file = "{}source/templates/nb_header.html".format(base_dir)
-    with open(header_file, "r") as f:
+    with open(nb_header_file, "r") as f:
         nb_header = f.read()
     nb_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
     with open(nb_nav_file, "r") as f:
@@ -65,10 +65,6 @@ def build_all(source_item, base_dir):
 def main():
 
     base_dir = "/Users/karlnilsen/apps/karlnilsen.com/"
-
-    header_file = "{}source/templates/header.html".format(base_dir)
-    with open(header_file, "r") as f:
-        header = f.read()
 
     parser = argparse.ArgumentParser(description=None)
     parser.add_argument("--root", action="store_true",
