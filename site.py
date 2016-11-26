@@ -4,13 +4,21 @@ import string
 import argparse
 
 
-def build_single(source_item, header, nav, schema, out_dir):
+def build_single(source_file, header, nav, out_dir):
 
+        with open(source_file, "r") as f:
+            source_item = f.read()
+        schema_file = os.path.dirname(
+            source_file) + "/" + os.path.splitext(os.path.basename(source_file))[0] + "_schema.txt"
+        with open(schema_file, "r", encoding="utf-8") as f:
+            schema = f.read()
         header_section = str.replace(header, "{{ SCHEMA }}", schema)
         body_section = str.replace(source_item, "{{ NAV }}", nav)
+
+
         text = header_section + body_section
 
-        file_name = out_dir + os.path.basename(source_item)
+        file_name = out_dir + os.path.basename(source_file)
         with open(file_name, "w") as f:
             f.write(text)
 
@@ -76,7 +84,7 @@ def main():
 
     if args.root:
         try:
-            source_item = "{}source/content/root/{}".format(base_dir, args.filename)
+            source_file = "{}source/content/root/{}".format(base_dir, args.filename)
         except:
             print("error:", sys.exc_info()[0])
             raise
@@ -86,15 +94,11 @@ def main():
         root_nav_file = "{}source/templates/root_nav.html".format(base_dir)
         with open(root_nav_file, "r") as f:
             nav = f.read()
-        schema_file = os.path.dirname(
-            source_item) + "/" + os.path.splitext(os.path.basename(source_item))[0] + "_schema.txt"
-        with open(schema_file, "r", encoding="utf-8") as f:
-            schema = f.read()
         out_dir = "{}build/".format(base_dir)
-        build_single(source_item, header, nav, schema, out_dir)
+        build_single(source_file, header, nav, out_dir)
     elif args.nb:
         try:
-            source_item = "{}source/content/nb/{}".format(base_dir, args.filename)
+            source_file = "{}source/content/nb/{}".format(base_dir, args.filename)
         except:
             print("error:", sys.exc_info()[0])
             raise
@@ -104,12 +108,8 @@ def main():
         root_nav_file = "{}source/templates/nb_nav.html".format(base_dir)
         with open(root_nav_file, "r") as f:
             nav = f.read()
-        schema_file = os.path.dirname(
-            source_item) + "/" + os.path.splitext(os.path.basename(source_item))[0] + "_schema.txt"
-        with open(schema_file, "r", encoding="utf-8") as f:
-            schema = f.read()
-        out_dir = "{}build/".format(base_dir)
-        build_single(source_item, header, nav, schema, out_dir)
+        out_dir = "{}build/nb/".format(base_dir)
+        build_single(source_file, header, nav, out_dir)
     else:
         source_item = []
         for dir_name, sub_dirs, files in os.walk("{}source/content/".format(base_dir)):
