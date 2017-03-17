@@ -14,7 +14,7 @@ def build_single(source_file, header, nav, footer, out_dir):
         schema = f.read()
     header_section = str.replace(header, "{{ SCHEMA }}", schema)
     body_section = str.replace(source_item, "{{ NAV }}", nav)
-    body_section = str.replace(page, "{{ FOOT }}", footer)
+    body_section = str.replace(body_section, "{{ FOOT }}", footer)
 
     text = header_section + body_section
 
@@ -66,7 +66,7 @@ def build_all(source_item, base_dir):
 
         header_section = str.replace(header, "{{ SCHEMA }}", schema)
         body_section = str.replace(page, "{{ NAV }}", nav)
-        body_section = str.replace(page, "{{ FOOT }}", footer)
+        body_section = str.replace(body_section, "{{ FOOT }}", footer)
         text = header_section + body_section
 
         file_name = out_dir + os.path.basename(file)
