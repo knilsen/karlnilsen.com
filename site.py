@@ -2,6 +2,7 @@
 import os
 import string
 import argparse
+# import better_exceptions
 
 
 def build_single(source_file, header, nav, footer, out_dir):
@@ -103,7 +104,7 @@ def main():
         with open(foot_file, "r") as f:
             footer = f.read()
         out_dir = "{}build/".format(base_dir)
-        build_single(source_file, header, nav, out_dir)
+        build_single(source_file, header, nav, footer, out_dir)
     elif args.nb:
         try:
             source_file = "{}source/content/nb/{}".format(
@@ -121,7 +122,7 @@ def main():
         with open(foot_file, "r") as f:
             footer = f.read()
         out_dir = "{}build/nb/".format(base_dir)
-        build_single(source_file, header, nav, out_dir)
+        build_single(source_file, header, nav, footer, out_dir)
     else:
         source_item = []
         for dir_name, sub_dirs, files in os.walk("{}source/content/".format(base_dir)):
