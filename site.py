@@ -77,7 +77,7 @@ def build_all(source_item, base_dir):
 
 def main():
 
-    base_dir = "/Users/karlnilsen/apps/karlnilsen.com/"
+    base_dir = "/Users/karlnilsen/app-repos/karlnilsen.com/"
 
     parser = argparse.ArgumentParser(description=None)
     parser.add_argument("--root", action="store_true",
